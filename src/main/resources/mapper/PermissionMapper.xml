@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guet.ljc.mapper.PermissionMapper">
+
+  <select id="findPermissionsByUserId" resultType="com.guet.ljc.model.Permission">
+    SELECT *
+    FROM permission per
+    WHERE id IN (
+      SELECT pid
+      FROM role_permission
+      WHERE rid IN (
+        SELECT id
+        FROM role
+        WHERE id IN (
+          SELECT rid
+          FROM user_role
+          WHERE uid = #{userId}
+        )
+      )
+    )
+  </select>
+  <select id="findAll" resultType="com.guet.ljc.model.Permission">
+    select *
+    from permission
+  </select>
+</mapper>
